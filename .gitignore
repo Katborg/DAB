@@ -1,0 +1,12 @@
+*.ncb
+*.suo
+*.ilk
+*.pdb
+*.user
+*.obj
+*.suo
+*.lock
+*.ide-wal
+*.sln
+*.csproj
+*.cache
