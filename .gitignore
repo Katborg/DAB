@@ -10,3 +10,5 @@
 *.sln
 *.csproj
 *.cache
+*.ide-shm
+*.ide-wal
