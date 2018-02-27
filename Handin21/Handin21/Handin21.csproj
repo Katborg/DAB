@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EA358820-6D89-4383-B37F-02B4C4470938}</ProjectGuid>
+    <ProjectGuid>{BED819CC-A6FB-4EC0-978C-28F82A37CECF}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Handin21</RootNamespace>
     <AssemblyName>Handin21</AssemblyName>
