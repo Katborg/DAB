@@ -7,7 +7,7 @@
 *.suo
 *.lock
 *.ide-wal
-*.sln
+
 *.csproj
 *.cache
 *.ide-shm
@@ -16,7 +16,7 @@ Handin21/.vs/Handin21/v15/.suo
 *.ide
 *.ide-shm
 *.ide-wal
-*.sln
+
 *.csproj
 *.cache
 *.cache
