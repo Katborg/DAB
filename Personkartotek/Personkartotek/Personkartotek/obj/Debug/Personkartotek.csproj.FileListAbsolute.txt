@@ -1,0 +1,7 @@
+C:\Users\ska\source\repos\Personkartotek\Personkartotek\obj\Debug\Personkartotek.csprojResolveAssemblyReference.cache
+C:\Users\ska\source\repos\Personkartotek\Personkartotek\obj\Debug\Personkartotek.csproj.CoreCompileInputs.cache
+C:\Users\ska\source\repos\Personkartotek\Personkartotek\bin\Debug\Personkartotek.exe.config
+C:\Users\ska\source\repos\Personkartotek\Personkartotek\bin\Debug\Personkartotek.exe
+C:\Users\ska\source\repos\Personkartotek\Personkartotek\bin\Debug\Personkartotek.pdb
+C:\Users\ska\source\repos\Personkartotek\Personkartotek\obj\Debug\Personkartotek.exe
+C:\Users\ska\source\repos\Personkartotek\Personkartotek\obj\Debug\Personkartotek.pdb
