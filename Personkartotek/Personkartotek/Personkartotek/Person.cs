@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Personkartotek
 {
@@ -25,7 +26,6 @@ namespace Personkartotek
         public string Mellemnavn { get; set; }
         public string Eftermnavn { get; set; }
 
-        public void 
 
         public string FullName
         {

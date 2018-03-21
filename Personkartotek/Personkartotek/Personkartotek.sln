@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Personkartotek", "Personkartotek\Personkartotek.csproj", "{B57F572C-13AE-483F-B0A4-81A8DEC8CB9A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Handin22", "Handin22\Handin22.csproj", "{707911DE-D4BD-408A-BD89-D002DC2B2F13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B57F572C-13AE-483F-B0A4-81A8DEC8CB9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B57F572C-13AE-483F-B0A4-81A8DEC8CB9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B57F572C-13AE-483F-B0A4-81A8DEC8CB9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{707911DE-D4BD-408A-BD89-D002DC2B2F13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{707911DE-D4BD-408A-BD89-D002DC2B2F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{707911DE-D4BD-408A-BD89-D002DC2B2F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{707911DE-D4BD-408A-BD89-D002DC2B2F13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

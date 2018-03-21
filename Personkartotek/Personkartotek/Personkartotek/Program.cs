@@ -13,15 +13,24 @@ namespace Personkartotek
         {
             using (var db = new BloggingContext())
             {
+                IPostNumberList postNumberList;
                 var Aarhus = new PostNumber(8000, "Århus C");
+                var Aabenraa = new PostNumber(6200, "Aabenraa");
+                postNumberList.City = Aarhus;
 
 
-                IAdress street = new Adress("The Street", ref Aarhus);
+                IAdress street  = new Adress("The Street", ref Aabenraa);
+                IAdress street1 = new Adress("The Street1", ref Aabenraa);
                 IAdress street2 = new Adress("The Street2", ref Aarhus);
+                IAdress street3 = new Adress("The Street3", ref Aarhus);
 
-                Person jasper = new Person("Jasper", "", "Anderson", "Friend", street);
-                Person jonathan = new Person("Jonathan", "", "Anderson", "Friend", street);
-                Person john = new Person("john", "", "Jepserson", "Friend", street2);
+                Person Jens = new Person("Jens", "", "Jaltesen", "Friend", street);
+                Person Jarl = new Person("Jarl", "", "Jensen", "Friend", street1);
+                Person jasper = new Person("Jasper", "", "Anderson", "Friend", street2);
+                Person jonathan = new Person("Jonathan", "", "Anderson", "Friend", street2);
+                Person john = new Person("john", "", "Jepserson", "Friend", street3);
+
+
             }
         }
         //static void Main(string[] args)

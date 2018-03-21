@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Data.Entity;
 
 namespace Personkartotek
 {
