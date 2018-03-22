@@ -13,7 +13,7 @@ namespace Handin22.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201803221243089_ini"; }
+            get { return "201803221416215_ini"; }
         }
         
         string IMigrationMetadata.Source

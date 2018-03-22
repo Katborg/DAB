@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Handin22
 {
-    class Person
+    public class Person
     {
 	    public Person(){}
 	    public Person(string firstName, string lastName, string type)

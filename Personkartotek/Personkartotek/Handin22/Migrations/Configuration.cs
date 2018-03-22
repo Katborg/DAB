@@ -5,14 +5,14 @@ namespace Handin22.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Handin22.Program.PersonContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Handin22.PersonContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(Handin22.Program.PersonContext context)
+        protected override void Seed(Handin22.PersonContext context)
         {
             //  This method will be called after migrating to the latest version.
 

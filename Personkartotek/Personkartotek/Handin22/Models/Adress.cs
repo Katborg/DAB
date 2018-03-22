@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Handin22
 {
-    class Adress
+	public class Adress
     {
         [Key]
 		public  long AdressId { get; set; }

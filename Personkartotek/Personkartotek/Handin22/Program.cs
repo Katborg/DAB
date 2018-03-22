@@ -10,37 +10,56 @@ namespace Handin22
 {
     class Program
     {
-        static void Main(string[] args)
+		static void Main(string[] args)
+		{
+			using (var u = new UnitOfWork(new PersonContext()))
+			{
+				var PC = new Person("Chistoffer", "Broborg", "Student");
+				var PS = new Person("Søren", "Katborg", "Student");
+				var alborgBy = new City()
+				{
+					Name = "Alborg",
+					ZipCode = 9000
+				};
+
+				var Alborgadress = new Adress()
+				{
+					Street = "Ceresbyen",
+					Number = "11A 2.1",
+					City = alborgBy,
+
+				};
+				//Adding  primary adresses
+				PC.PAdress = Alborgadress;
+				PS.PAdress = Alborgadress;
+
+				u.Persons.Add(PC);
+				u.Persons.Add(PS);
+				//Adding Adresses to db
+				u.Adress.Add(Alborgadress);
+				//Adding cities to db
+				u.Cities.Add(alborgBy);
+
+				u.Complete();
+
+				List<Person> Personslist = (List<Person>) u.Persons.GetAll();
+
+				foreach (var item in Personslist)
+				{
+					Console.WriteLine($"{item.FirstName} {item.LastName}");
+				}
+
+				Console.ReadKey();
+			}
+		}
+
+
+
+	  /*  static void Main(string[] args)
         {
             using (var db = new PersonContext())
             {
-	            var PC = new Person("Chistoffer", "Broborg", "Student");
-
-				var alborgBy = new City()
-	            {
-		            Name = "Alborg",
-		            ZipCode = 9000
-				};
-
-	            var Alborgadress = new Adress()
-	            {
-		            Street = "Ceresbyen",
-		            Number = "11A 2.1",
-		            City = alborgBy,
-		            
-	            };
-				//Adding  primary adresses
-	            PC.PAdress = Alborgadress;
-				//Adding alternative adresses
-				//  PC.AAdresses.Add(Alborgadress); 
-				
-	            db.Persons.Add(PC);
-	            //Adding Adresses to db
-	            db.Adresses.Add(Alborgadress);
-	            //Adding cities to db
-	            db.Cities.Add(alborgBy);
-
-	            db.SaveChanges();
+	            
 
 				//Persons
 /*				var P1 = new Person()
@@ -144,7 +163,7 @@ namespace Handin22
 				 //Adding cities to db
 				 db.Cities.Add(Aabenraa);
 				 db.Cities.Add(Aarhus);
-				*/
+				
 				 //Display persons
 				 var Pquery = from b in db.Persons orderby b.FirstName select b;
 				 Console.WriteLine("All persons in DB: ");
@@ -161,13 +180,13 @@ namespace Handin22
 					 Console.WriteLine(item.Street + item.Number);
 				 }
 
-				 //Display zipcodes
-			/*	 var Zquery = from b in db.ZipCodes orderby b.City.Name select b  ;
+	  //Display zipcodes
+		var Zquery = from b in db.ZipCodes orderby b.City.Name select b  ;
 				 Console.WriteLine("All persons in DB: ");
 				 foreach (var item in Zquery)
 				 {
 					 Console.WriteLine(item.Zip + item.City);
-				 }*/
+				 }
 
 				 //Display Cities
 				 var Cquery = from b in db.Cities orderby b.Name select b;
@@ -179,13 +198,6 @@ namespace Handin22
 				Console.ReadKey();
             }
         }
-        public class PersonContext : DbContext
-        {
-            public DbSet<Person> Persons { get; set; }
-            public DbSet<Adress> Adresses { get; set; }
-           // public DbSet<ZipCode> ZipCodes { get; set; }
-            public DbSet<City> Cities { get; set; }
-
-        }
+	*/
     }
 }
