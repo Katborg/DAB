@@ -49,17 +49,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adress.cs" />
-    <Compile Include="City.cs" />
-    <Compile Include="Person.cs" />
-    <Compile Include="Phone.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Models\Adress.cs" />
+    <Compile Include="Models\City.cs" />
+    <Compile Include="context.cs" />
+    <Compile Include="Migrations\201803221243089_ini.cs" />
+    <Compile Include="Migrations\201803221243089_ini.Designer.cs">
+      <DependentUpon>201803221243089_ini.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\Phone.cs" />
+    <Compile Include="Models\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ZipCode.cs" />
+    <Compile Include="Models\ZipCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201803221243089_ini.resx">
+      <DependentUpon>201803221243089_ini.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="repos\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

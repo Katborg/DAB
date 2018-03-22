@@ -9,8 +9,9 @@ namespace Handin22
 {
     class Phone
     {
-        [Key]
-        public string Number {get; set;}
+        
+		public long PhoneID { get; set; }
+		public string Number {get; set;}
         public string provider {get; set;}
 }
 }

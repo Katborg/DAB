@@ -8,11 +8,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Handin22
 {
-    class ZipCode
+    class City
     {
-        [Key, ForeignKey("City")]
-        public string Zip {get; set;}
-        
-        public City City {get; set;}
-}
+		public long CityId { get; set; }
+		public string Name { get; set; }
+	    public int ZipCode { get; set; }
+
+       // public virtual List<ZipCode>  ZipCode { get; set; }
+    }
 }

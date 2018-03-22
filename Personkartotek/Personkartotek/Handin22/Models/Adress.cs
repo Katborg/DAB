@@ -11,11 +11,11 @@ namespace Handin22
     class Adress
     {
         [Key]
+		public  long AdressId { get; set; }
         public string Street { get; set; }
         public string Number { get; set; }
-
         public City City { get; set; }
-        public List<Person> Persons { get; set; }
+        public virtual List<Person> Persons { get; set; }
 
     }
 }

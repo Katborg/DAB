@@ -13,10 +13,10 @@ namespace Personkartotek
         {
             using (var db = new BloggingContext())
             {
-                IPostNumberList postNumberList;
+               // IPostNumberList postNumberList;
                 var Aarhus = new PostNumber(8000, "Århus C");
                 var Aabenraa = new PostNumber(6200, "Aabenraa");
-                postNumberList.City = Aarhus;
+                //postNumberList.City = Aarhus;
 
 
                 IAdress street  = new Adress("The Street", ref Aabenraa);
