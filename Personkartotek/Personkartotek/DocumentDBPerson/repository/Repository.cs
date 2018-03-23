@@ -2,32 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using NuGet.Common;
 
 
 namespace DocumentDBPerson.repository
 {
 	public class Repository<IEntity> : IRepository<IEntity> where IEntity : class
 	{
-		private const string EndpointUri = "https://person-database.documents.azure.com:443/";
-		private const string PrimaryKey = "MKIfr8B0zXcrM4GkcospYFF9loGIYHwEZCIKjjhdX3rXerV5xZlVw9QkfiNj6LHGTmZNwCApwHvnVhw9wMgbHA==";
-		private DocumentClient _client;
+		
+		protected DocumentClient _client;
 
-		private readonly string _databaseId;
+		protected readonly string _databaseId;
+		protected readonly string _collectionId;
 
-		private readonly AsyncLazy<Database> _database;
-		private AsyncLazy<DocumentCollection> _collection;
+		protected readonly AsyncLazy<Database> _database;
+		protected AsyncLazy<DocumentCollection> _collection;
 
-		public Repository(DocumentClient dbClient, string databaseName)
+		public Repository(DocumentClient dbClient, string databaseName, string collectionid)
 		{
+			
 			_client = dbClient;
 			_databaseId = databaseName;
-
+			_collectionId = collectionid;
 
 			_database = new AsyncLazy<Database>(async () => await this._client.CreateDatabaseIfNotExistsAsync(new Database { Id = "PersonDB_oa" }));
 
-			DocumentCollection collection = new DocumentCollection { Id = "PersonCollection_oa" };
+			DocumentCollection collection = new DocumentCollection { Id = _collectionId };
 
 			//setting index Policy to manuel so we can use PersonId as identifier
 			collection.IndexingPolicy = new IndexingPolicy(new RangeIndex(DataType.String) { Precision = -1 });
@@ -39,7 +42,7 @@ namespace DocumentDBPerson.repository
 		
 		public async IEntity Get(string id)
 		{
-			var retVal = await GetDocumentByIdAsync(id);
+			var retVal = new AsyncLazy<Database>(async () => await GetDocumentByIdAsync(id));
 			return (IEntity)(dynamic)retVal;
 		}
 
@@ -49,28 +52,32 @@ namespace DocumentDBPerson.repository
 			return reply;
 		}
 
-		public void Add(IEntity entity)
+		public virtual void Add(IEntity entity)
 		{
-			string reply = new AsyncLazy<Database>(async () => await this.CreatePersonDocumentIfNotExists(_databaseId, _collection, entity));
+			var reply = new AsyncLazy<Database>(async () => await this.CreatePersonDocumentIfNotExists(_databaseId, _collectionId, entity));
 		}
 
 		public void AddRange(IEnumerable<IEntity> entity)
 		{
 			foreach (var VARIABLE in entity)
 			{
-				string reply = new AsyncLazy<Database>(async () => await this.CreatePersonDocumentIfNotExists(_databaseId, _collection, VARIABLE));
+				var reply = new AsyncLazy<Database>(async () => await this.CreatePersonDocumentIfNotExists(_databaseId, _collectionId, VARIABLE));
 
 			}
 		}
 
-		public async void Remove(IEntity entity, RequestOptions requestOptions = null)
+
+		public virtual async void Remove(IEntity entity)
 		{
 
-			var result = await _client.DeleteDocumentCollectionAsync((await _collection).SelfLink, requestOptions);
+			var docUri = UriFactory.CreateDocumentUri(_databaseId, _collection, entity.id);
+			await _database.DeleteDocumentAsync(docUri);
 
-			bool isSuccess = result.StatusCode == HttpStatusCode.NoContent;
+			//var result = await _client.DeleteDocumentCollectionAsync((await _collection).SelfLink, null);
 
-			_collection = new AsyncLazy<DocumentCollection>(async () => await GetOrCreateCollectionAsync());
+			//bool isSuccess = result.StatusCode == HttpStatusCode.NoContent;
+
+			//_collection = new AsyncLazy<DocumentCollection>(async () => await GetOrCreateCollectionAsync());
 
 		}
 
@@ -78,8 +85,30 @@ namespace DocumentDBPerson.repository
 		{
 			foreach (var VARIABLE in entity)
 			{
-				var result = await _client.DeleteDocumentCollectionAsync((await _collection).SelfLink, VARIABLE));
+				var result = UriFactory.CreateDatabaseUri(_databaseId, _collection, VARIABLE);
+				//await _client.DeleteDocumentCollectionAsync((await _collection).SelfLink, (RequestOptions)VARIABLE));
 
+			}
+		}
+
+		protected async Task CreatePersonDocumentIfNotExists(string databaseName, string collectionName, IEntity entity)
+		{
+			try
+			{
+				await this._client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, entity.ToString()));
+				//this.WriteToConsoleAndPromptToContinue("Found {0}", person.PersonId);
+			}
+			catch (DocumentClientException de)
+			{
+				if (de.StatusCode == HttpStatusCode.NotFound)
+				{
+					await this._client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), person);
+					//this.WriteToConsoleAndPromptToContinue("Created Person {0}", person.PersonId);
+				}
+				else
+				{
+					throw;
+				}
 			}
 		}
 	}

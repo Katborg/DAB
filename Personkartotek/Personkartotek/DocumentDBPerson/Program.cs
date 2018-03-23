@@ -12,14 +12,15 @@ namespace DocumentDBPerson
 {
 	class Program
 	{
-		
+		private const string EndpointUri = "https://person-database.documents.azure.com:443/";
+		private const string PrimaryKey = "MKIfr8B0zXcrM4GkcospYFF9loGIYHwEZCIKjjhdX3rXerV5xZlVw9QkfiNj6LHGTmZNwCApwHvnVhw9wMgbHA==";
 
 		static void Main(string[] args)
 		{
 			try
 			{
 				Program p = new Program();
-				p.GetStartedDemo().Wait();
+				//p.GetStartedDemo().Wait();
 			}
 			catch (DocumentClientException de)
 			{
@@ -38,11 +39,11 @@ namespace DocumentDBPerson
 			}
 
 		}
-		private async Task GetStartedDemo()
+		/*private async Task GetStartedDemo()
 		{
 			this.client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
 
-			
+
 
 			City oldmantown = new City() { Name = "Old Man Town", ZipCode = 9090 };
 			City Youngmantown = new City() { Name = "yuong Man Town", ZipCode = 1090 };
@@ -64,26 +65,7 @@ namespace DocumentDBPerson
 			Console.WriteLine("Press any key to continue ...");
 			Console.ReadKey();
 		}
-
-		private async Task CreatePersonDocumentIfNotExists(string databaseName, string collectionName, Person person)
-		{
-			try
-			{
-				await this.client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, person.PersonId));
-				this.WriteToConsoleAndPromptToContinue("Found {0}", person.PersonId);
-			}
-			catch (DocumentClientException de)
-			{
-				if (de.StatusCode == HttpStatusCode.NotFound)
-				{
-					await this.client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), person);
-					this.WriteToConsoleAndPromptToContinue("Created Person {0}", person.PersonId);
-				}
-				else
-				{
-					throw;
-				}
-			}
-		}
+		*/
+		
 	}
 }

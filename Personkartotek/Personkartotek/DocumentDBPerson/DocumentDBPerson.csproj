@@ -137,7 +137,9 @@
     <Compile Include="Models\Phone.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="repository\IPersonRepository.cs" />
     <Compile Include="repository\IRepository.cs" />
+    <Compile Include="repository\PersonRepositry.cs" />
     <Compile Include="repository\Repository.cs" />
   </ItemGroup>
   <ItemGroup>
