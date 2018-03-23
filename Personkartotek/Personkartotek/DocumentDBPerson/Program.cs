@@ -12,9 +12,7 @@ namespace DocumentDBPerson
 {
 	class Program
 	{
-		private const string EndpointUri = "https://person-database.documents.azure.com:443/";
-		private const string PrimaryKey = "MKIfr8B0zXcrM4GkcospYFF9loGIYHwEZCIKjjhdX3rXerV5xZlVw9QkfiNj6LHGTmZNwCApwHvnVhw9wMgbHA==";
-		private DocumentClient client;
+		
 
 		static void Main(string[] args)
 		{
@@ -44,15 +42,7 @@ namespace DocumentDBPerson
 		{
 			this.client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
 
-			await this.client.CreateDatabaseIfNotExistsAsync(new Database { Id = "PersonDB_oa" });
-
-			DocumentCollection collection = new DocumentCollection {Id = "PersonCollection_oa"};
-
-			//setting index Policy to manuel so we can use PersonId as identifier
-			collection.IndexingPolicy = new IndexingPolicy(new RangeIndex(DataType.String) { Precision = -1 });
-			collection.IndexingPolicy.IndexingMode = IndexingMode.Consistent;
-			//create Collection
-			await this.client.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri("PersonDB_oa"), collection);
+			
 
 			City oldmantown = new City() { Name = "Old Man Town", ZipCode = 9090 };
 			City Youngmantown = new City() { Name = "yuong Man Town", ZipCode = 1090 };
@@ -65,8 +55,7 @@ namespace DocumentDBPerson
 			};
 			Person chris = new Person("Chris", "toffer", "young man"){ PersonId = "1", PAdress = new Adress() { City = Youngmantown, Number = "105", Street = "anotherStreet" } };
 			
-			await this.CreatePersonDocumentIfNotExists("PersonDB_oa", "PersonCollection_oa", per);
-			await this.CreatePersonDocumentIfNotExists("PersonDB_oa", "PersonCollection_oa", chris);
+			
 
 		}
 		private void WriteToConsoleAndPromptToContinue(string format, params object[] args)
