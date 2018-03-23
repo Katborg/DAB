@@ -35,6 +35,7 @@ namespace Handin22
 
 				u.Persons.Add(PC);
 				u.Persons.Add(PS);
+
 				//Adding Adresses to db
 				u.Adress.Add(Alborgadress);
 				//Adding cities to db

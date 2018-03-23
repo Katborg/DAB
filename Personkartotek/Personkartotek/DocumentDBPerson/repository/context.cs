@@ -6,8 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Handin22
+namespace DocumentDBPerson
 {
+	private const string EndpointUri = "https://person-database.documents.azure.com:443/";
+	private const string PrimaryKey = "MKIfr8B0zXcrM4GkcospYFF9loGIYHwEZCIKjjhdX3rXerV5xZlVw9QkfiNj6LHGTmZNwCApwHvnVhw9wMgbHA==";
+	private DocumentClient client;
+
 
 	public class PersonContext : DbContext
 	{

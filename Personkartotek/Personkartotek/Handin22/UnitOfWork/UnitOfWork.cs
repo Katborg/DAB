@@ -10,9 +10,7 @@ namespace Handin22
 	class UnitOfWork : IUnitOfWork
 	{
 		private readonly PersonContext _context;
-
 		
-
 		public UnitOfWork(PersonContext context)
 		{
 			_context = context;

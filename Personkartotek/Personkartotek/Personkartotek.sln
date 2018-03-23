@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Personkartotek", "Personkar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Handin22", "Handin22\Handin22.csproj", "{707911DE-D4BD-408A-BD89-D002DC2B2F13}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentDBPerson", "DocumentDBPerson\DocumentDBPerson.csproj", "{117B1F4B-F594-4611-816D-A558744387FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{707911DE-D4BD-408A-BD89-D002DC2B2F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{707911DE-D4BD-408A-BD89-D002DC2B2F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{707911DE-D4BD-408A-BD89-D002DC2B2F13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{117B1F4B-F594-4611-816D-A558744387FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{117B1F4B-F594-4611-816D-A558744387FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{117B1F4B-F594-4611-816D-A558744387FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{117B1F4B-F594-4611-816D-A558744387FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
