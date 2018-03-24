@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using Newtonsoft.Json;
 using NuGet.Common;
 
 
 namespace DocumentDBPerson.repository
 {
-	public class Repository<IEntity> : IRepository<IEntity> where IEntity : class
+	public class Repository<T> : IRepository<T> where T : class
 	{
 		
 		protected DocumentClient _client;
@@ -21,7 +24,8 @@ namespace DocumentDBPerson.repository
 		protected readonly AsyncLazy<Database> _database;
 		protected AsyncLazy<DocumentCollection> _collection;
 
-		public Repository(DocumentClient dbClient, string databaseName, string collectionid)
+
+        public Repository(DocumentClient dbClient, string databaseName, string collectionid)
 		{
 			
 			_client = dbClient;
@@ -38,26 +42,29 @@ namespace DocumentDBPerson.repository
 			//create Collection
 			_collection = new AsyncLazy<DocumentCollection>(async () => await this._client.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri("PersonDB_oa"), collection));
 
-		}
+        }
 		
-		public async IEntity Get(string id)
+		public async Task<T> Get(string id)
 		{
-			var retVal = new AsyncLazy<Database>(async () => await GetDocumentByIdAsync(id));
-			return (IEntity)(dynamic)retVal;
+			//var retVal = new AsyncLazy<Database>(async () => await GetDocumentByIdAsync(id));
+            var retVal = await GetDocumentByIdAsync(id));
+            return (T)(dynamic)retVal;
 		}
 
-		public async IEnumerable<IEntity> GetAll()
+
+        public async Task<IEnumerable<T>> GetAll()
 		{
-			var reply = new AsyncLazy<Database>(async () => _client.CreateDocumentQuery<IEntity>((await _collection).SelfLink).AsEnumerable());
-			return reply;
+			//var reply = new AsyncLazy<Database>(async () => _client.CreateDocumentQuery<IEntity>((await _collection).SelfLink).AsEnumerable());
+            var reply = _client.CreateDocumentQuery<T>((await _collection).SelfLink).AsEnumerable();
+            return reply;
 		}
 
-		public virtual void Add(IEntity entity)
+		public virtual void Add(T entity)
 		{
 			var reply = new AsyncLazy<Database>(async () => await this.CreatePersonDocumentIfNotExists(_databaseId, _collectionId, entity));
 		}
 
-		public void AddRange(IEnumerable<IEntity> entity)
+		public void AddRange(IEnumerable<T> entity)
 		{
 			foreach (var VARIABLE in entity)
 			{
@@ -67,7 +74,7 @@ namespace DocumentDBPerson.repository
 		}
 
 
-		public virtual async void Remove(IEntity entity)
+		public virtual async void Remove(T entity)
 		{
 
 			var docUri = UriFactory.CreateDocumentUri(_databaseId, _collection, entity.id);
@@ -81,7 +88,7 @@ namespace DocumentDBPerson.repository
 
 		}
 
-		public async void RemoveRange(IEnumerable<IEntity> entity)
+		public async void RemoveRange(IEnumerable<T> entity)
 		{
 			foreach (var VARIABLE in entity)
 			{
@@ -91,7 +98,7 @@ namespace DocumentDBPerson.repository
 			}
 		}
 
-		protected async Task CreatePersonDocumentIfNotExists(string databaseName, string collectionName, IEntity entity)
+		protected async Task CreatePersonDocumentIfNotExists(string databaseName, string collectionName, T entity)
 		{
 			try
 			{
@@ -111,5 +118,57 @@ namespace DocumentDBPerson.repository
 				}
 			}
 		}
-	}
+
+        private async Task<Document> GetDocumentByIdAsync(object id)
+        {
+            return _client.CreateDocumentQuery<Document>((await _collection).SelfLink).Where(d => d.Id == id.ToString()).AsEnumerable().FirstOrDefault();
+        }
+
+        async Task<T> IRepository<T>.Get(string id)
+        {
+            var retVal = await GetDocumentByIdAsync(id);
+            return (T)(dynamic)retVal;
+        }
+
+        async Task<IEnumerable<T>> IRepository<T>.GetAll()
+        {
+            return _client.CreateDocumentQuery<T>((await _collection).SelfLink).AsEnumerable();
+        }
+
+        async Task<T> IRepository<T>.AddOrUpdate(T entity)
+        {
+            T upsertedEntity;
+
+            var upsertedDoc = await _client.UpsertDocumentAsync((await _collection).SelfLink, entity, null);
+            upsertedEntity = JsonConvert.DeserializeObject<T>(upsertedDoc.Resource.ToString());
+
+            return upsertedEntity;
+        }
+
+        async Task<bool> IRepository<T>.Remove(T entity)
+        {
+        
+            var result = await _client.DeleteDocumentCollectionAsync((await _collection).SelfLink,null);
+
+            bool isSuccess = result.StatusCode == HttpStatusCode.NoContent;
+
+            _collection = new AsyncLazy<DocumentCollection>(async () => await GetOrCreateCollectionAsync());
+
+            return isSuccess;
+        }
+
+        async Task<DocumentCollection> GetOrCreateCollectionAsync()
+        {
+            DocumentCollection collection = _client.CreateDocumentCollectionQuery((await _database).SelfLink).Where(c => c.Id == _collectionName).ToArray().FirstOrDefault();
+
+            if (collection == null)
+            {
+                collection = new DocumentCollection { Id = _collectionName };
+
+                collection = await _client.CreateDocumentCollectionAsync((await _database).SelfLink, collection);
+            }
+
+            return collection;
+        }
+    }
 }

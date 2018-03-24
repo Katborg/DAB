@@ -3,14 +3,13 @@ using System.Threading.Tasks;
 
 namespace DocumentDBPerson.repository
 {
-	public interface IRepository<IEntity> where IEntity : class
+	public interface IRepository<T> where T : class
 	{
 
-		IEntity Get(string id);
-		IEnumerable<IEntity> GetAll();
-		void Add(IEntity entity);
-		void AddRange(IEnumerable<IEntity> entity);
-		void Remove(IEntity entity);
-		void RemoveRange(IEnumerable<IEntity> entity);
+		Task<T> Get(string id);
+		Task<IEnumerable<T>> GetAll();
+        Task<T> AddOrUpdate(T entity);
+		Task<bool> Remove(T entity);
+		
 	}
 }
