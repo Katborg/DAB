@@ -9,6 +9,10 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
 using NuGet.Common;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents.Linq;
+using Database = Microsoft.Azure.Documents.Database;
 
 
 namespace DocumentDBPerson.repository
@@ -42,178 +46,92 @@ namespace DocumentDBPerson.repository
             //create Collection
             _collection = new AsyncLazy<DocumentCollection>(async () => await this._client.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri("PersonDB_oa"), collection));
 
+
+            _client.CreateDatabaseIfNotExistsAsync(new Database { Id = _databaseId });
+            _client.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(_databaseId), new DocumentCollection { Id = _collectionId });
         }
 
-        public async Task<T> Get(string id)
-        {
-            //var retVal = new AsyncLazy<Database>(async () => await GetDocumentByIdAsync(id));
-            var retVal = await GetDocumentByIdAsync(id);
-            return (T)(dynamic)retVal;
-        }
-
-
-        public async Task<IEnumerable<T>> GetAll()
-        {
-            //var reply = new AsyncLazy<Database>(async () => _client.CreateDocumentQuery<IEntity>((await _collection).SelfLink).AsEnumerable());
-            var reply = _client.CreateDocumentQuery<T>((await _collection).SelfLink).AsEnumerable();
-            return reply;
-        }
-
-        public virtual void Add(T entity)
-        {
-            var reply = new AsyncLazy<Database>(async () => await this.CreatePersonDocumentIfNotExists(_databaseId, _collectionId, entity));
-        }
-
-        public void AddRange(IEnumerable<T> entity)
-        {
-            foreach (var VARIABLE in entity)
-            {
-                var reply = new AsyncLazy<Database>(async () => await this.CreatePersonDocumentIfNotExists(_databaseId, _collectionId, VARIABLE));
-
-            }
-        }
-
-
-        public virtual async void Remove(T entity)
-        {
-
-            var docUri = UriFactory.CreateDocumentUri(_databaseId, _collection, entity.id);
-            await _database.DeleteDocumentAsync(docUri);
-
-            //var result = await _client.DeleteDocumentCollectionAsync((await _collection).SelfLink, null);
-
-            //bool isSuccess = result.StatusCode == HttpStatusCode.NoContent;
-
-            //_collection = new AsyncLazy<DocumentCollection>(async () => await GetOrCreateCollectionAsync());
-
-        }
-
-        public async void RemoveRange(IEnumerable<T> entity)
-        {
-            foreach (var VARIABLE in entity)
-            {
-                var result = UriFactory.CreateDatabaseUri(_databaseId, _collection, VARIABLE);
-                //await _client.DeleteDocumentCollectionAsync((await _collection).SelfLink, (RequestOptions)VARIABLE));
-
-            }
-        }
-
-        protected async Task CreatePersonDocumentIfNotExists(string databaseName, string collectionName, T entity)
+        public T Get(int id)
         {
             try
             {
-                await this._client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, entity.ToString()));
-                //this.WriteToConsoleAndPromptToContinue("Found {0}", person.PersonId);
+                Document document =
+                    _client.ReadDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _collectionId, id.ToString())).Result;
+                return (T)(dynamic)document;
             }
-            catch (DocumentClientException de)
+            catch (Exception e)
             {
-                if (de.StatusCode == HttpStatusCode.NotFound)
-                {
-                    await this._client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), person);
-                    //this.WriteToConsoleAndPromptToContinue("Created Person {0}", person.PersonId);
-                }
-                else
-                {
-                    throw;
-                }
+                Console.WriteLine(e);
+                throw;
             }
+
         }
 
-        private async Task<Document> GetDocumentByIdAsync(object id)
+
+        public IEnumerable<T> GetAll()
         {
-            return _client.CreateDocumentQuery<Document>((await _collection).SelfLink).Where(d => d.Id == id.ToString()).AsEnumerable().FirstOrDefault();
-        }
-        private async Task CreateDocumentIfNotExists(string databaseName, string collectionName, Person person)
-        {
-            try
+            IDocumentQuery<T> query = _client
+                .CreateDocumentQuery<T>(UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId))
+                .AsDocumentQuery();
+
+            List<T> results = new List<T>();
+            while (query.HasMoreResults)
             {
-                await this._client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, person.PersonId), new RequestOptions { PartitionKey = new PartitionKey(family.LastName) });
-                this.WriteToConsoleAndPromptToContinue("Found {0}", person.PersonId);
+                results.AddRange(query.ExecuteNextAsync<T>().Result);
             }
-            catch (DocumentClientException de)
-            {
-                if (de.StatusCode == HttpStatusCode.NotFound)
-                {
-                    await this._client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), person);
-                    this.WriteToConsoleAndPromptToContinue("Created Family {0}", person.PersonId);
-                }
-                else
-                {
-                    throw;
-                }
-            }
+
+            return results;
         }
 
-
-        //After Tutorial in L6
-        private async Task Create(string databaseName, string collectionName, Person person)
+        public IEnumerable<T> Find(Expression<Func<T, bool>> predicate)
         {
-            try
+            IDocumentQuery<T> query = _client
+                .CreateDocumentQuery<T>(UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId))
+                .Where(predicate).AsDocumentQuery();
+            List<T> results = new List<T>();
+            while (query.HasMoreResults)
             {
-                await this._client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, person.PersonId), new RequestOptions { PartitionKey = new PartitionKey(family.LastName) });
-                this.WriteToConsoleAndPromptToContinue("Found {0}", person.PersonId);
-            }
-            catch (DocumentClientException de)
-            {
-                if (de.StatusCode == HttpStatusCode.NotFound)
-                {
-                    await this._client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), person);
-                    this.WriteToConsoleAndPromptToContinue("Created Person {0}", person.PersonId);
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-        private void Read(string databaseName, string collectionName)
-        {
-            // Set some common query options
-            FeedOptions queryOptions = new FeedOptions { MaxItemCount = -1 };
-
-            // Run a simple query via LINQ. DocumentDB indexes all properties, so queries can be completed efficiently and with low latency.
-            // Here we find the Andersen family via its LastName
-            IQueryable<Person> PersonQuery = this._client.CreateDocumentQuery<Person>(
-                UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), queryOptions)
-                .Where(f => f.LastName == "Andersen");
-
-            // The query is executed synchronously here, but can also be executed asynchronously via the IDocumentQuery<T> interface
-            Console.WriteLine("Running LINQ query...");
-            foreach (Person p in PersonQuery)
-            {
-                Console.WriteLine("\tRead {0}", p);
+                results.AddRange(query.ExecuteNextAsync<T>().Result);
             }
 
-            // Now execute the same query via direct SQL
-            IQueryable<Person> personQueryInSql = this._client.CreateDocumentQuery<Person>(
-                UriFactory.CreateDocumentCollectionUri(databaseName, collectionName),
-                "SELECT * FROM Person WHERE Person.LastName = 'Andersen'",
-                queryOptions);
+            return results;
+        }
 
-            Console.WriteLine("Running direct SQL query...");
-            foreach (Person p in personQueryInSql)
+        public T SingleOrDefault(Expression<Func<T, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(T entity)
+        {
+            _client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId), entity);
+        }
+
+
+        public void AddRange(IEnumerable<T> e)
+        {
+            foreach (T p in e)
             {
-                Console.WriteLine("\tRead {0}", p);
+                Add(p);
             }
+        }
 
-            Console.WriteLine("Press any key to continue ...");
-            Console.ReadKey();
-        }
-        private async Task Update(string databaseName, string collectionName, Person person)
+
+        public void Remove(T entity)
         {
-            await this._client.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, person.PersonId), person);
-            this.WriteToConsoleAndPromptToContinue("Updated Person [{0},{1}]", person.LastName, person.PersonId);
+            Person tmp = entity as Person;
+            _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _collectionId, tmp.PersonId));
         }
-        async Task Delete(string databaseName, string collectionName, string partitionKey, string documentKey)
+
+        public void RemoveRange(IEnumerable<T> e)
         {
-            await this._client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, documentKey), new RequestOptions { PartitionKey = new PartitionKey(partitionKey) });
-            Console.WriteLine("Deleted Person [{0},{1}]", partitionKey, documentKey);
+
+            foreach (T p in e)
+            {
+                Remove(p);
+            }
         }
-        private void WriteToConsoleAndPromptToContinue(string format, params object[] args)
-        {
-            Console.WriteLine(format, args);
-            Console.WriteLine("Press any key to continue ...");
-            Console.ReadKey();
-        }
+
+        
     }
 }
