@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Handin22.repos;
+
 
 namespace Handin22
 {
 	public class AdressRepository :  Repository<Adress>, IAdressRepository
 	{
-		public AdressRepository(PersonContext context) : base(context)
+		public AdressRepository(DbContext context) : base(context)
 		{
 		}
 

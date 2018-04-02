@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Net;
+using System.Security;
+using DocumentDBPerson.repository;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
@@ -11,14 +14,15 @@ namespace DocumentDBPerson
 	class Program
 	{
 		private const string EndpointUri = "https://person-database.documents.azure.com:443/";
-		private const string PrimaryKey = "MKIfr8B0zXcrM4GkcospYFF9loGIYHwEZCIKjjhdX3rXerV5xZlVw9QkfiNj6LHGTmZNwCApwHvnVhw9wMgbHA==";
+		private const String PrimaryKey = "MKIfr8B0zXcrM4GkcospYFF9loGIYHwEZCIKjjhdX3rXerV5xZlVw9QkfiNj6LHGTmZNwCApwHvnVhw9wMgbHA==";
+		
 
 		static void Main(string[] args)
 		{
 			try
 			{
 				Program p = new Program();
-				//p.GetStartedDemo().Wait();
+				p.GetStarted().Wait();
 			}
 			catch (DocumentClientException de)
 			{
@@ -37,33 +41,40 @@ namespace DocumentDBPerson
 			}
 
 		}
-		/*private async Task GetStartedDemo()
+		private async Task GetStarted()
 		{
-			this.client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
-
-
-
+			
 			City oldmantown = new City() { Name = "Old Man Town", ZipCode = 9090 };
 			City Youngmantown = new City() { Name = "yuong Man Town", ZipCode = 1090 };
 
 			Person per = new Person("per", "Persen", "old man")
 			{
-				PersonId = "3", PAdress = 
+				PersonId = "9", PAdress = 
+					new Adress() { City = oldmantown, Number = "5", Street = "theStreet" }
+
+			};
+			Person Jasper = new Person("Jasper", "Man", "middel man")
+			{
+				PersonId = "7",
+				PAdress =
 					new Adress() { City = oldmantown, Number = "5", Street = "theStreet" }
 
 			};
 			Person chris = new Person("Chris", "toffer", "young man"){ PersonId = "1", PAdress = new Adress() { City = Youngmantown, Number = "105", Street = "anotherStreet" } };
+
+			DocumentClient client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
+
+			PersonRepositry personRepository = new PersonRepositry(client, "PersonDB_oa", "PersonCol" );
 			
-			
+			personRepository.Add(chris);
+			personRepository.Add(per);
+			personRepository.Add(Jasper);
+
+			Person person1 = personRepository.Get(1);
+
+			Console.WriteLine(person1);
 
 		}
-		private void WriteToConsoleAndPromptToContinue(string format, params object[] args)
-		{
-			Console.WriteLine(format, args);
-			Console.WriteLine("Press any key to continue ...");
-			Console.ReadKey();
-		}
-		*/
-		
+
 	}
 }

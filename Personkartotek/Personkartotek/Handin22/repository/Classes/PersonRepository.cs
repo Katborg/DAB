@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Handin22.repos.Classes
+namespace Handin22
 {
 	class PersonRepository : Repository<Person>, IPersonRepositroy
 	{
@@ -15,9 +15,7 @@ namespace Handin22.repos.Classes
 
 		public override void Add(Person entity)
 		{
-			if(!PersonContext.Persons.Any(
-				p => p.FirstName == entity.FirstName 
-				     && p.LastName == entity.LastName))
+			if(!PersonContext.Persons.Any(p => p.FirstName == entity.FirstName && p.LastName == entity.LastName))
 				PersonContext.Persons.Add(entity);
 		}
 	}
