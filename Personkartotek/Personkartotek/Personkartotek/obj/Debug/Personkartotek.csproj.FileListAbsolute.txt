@@ -40,3 +40,4 @@ C:\Users\chris\source\repos\DAB\Personkartotek\Personkartotek\Personkartotek\obj
 C:\Users\chris\source\repos\DAB\Personkartotek\Personkartotek\Personkartotek\obj\Debug\Personkartotek.csproj.CopyComplete
 C:\Users\chris\source\repos\DAB\Personkartotek\Personkartotek\Personkartotek\obj\Debug\Personkartotek.exe
 C:\Users\chris\source\repos\DAB\Personkartotek\Personkartotek\Personkartotek\obj\Debug\Personkartotek.pdb
+C:\Users\ska\Documents\_Ingenioer\DAB\Git\DAB\Personkartotek\Personkartotek\Personkartotek\obj\Debug\Personkartotek.csproj.CopyComplete

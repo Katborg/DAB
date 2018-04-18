@@ -11,12 +11,13 @@ namespace Handin22
 
 	public class PersonContext : DbContext
 	{
+		
 		public DbSet<Person> Persons { get; set; }
 		public DbSet<Adress> Adresses { get; set; }
 		public DbSet<City> Cities { get; set; }
 
 		public PersonContext()
-		:base("name=AsureCosmosDB")
+		:base("name=HandIn22")
 		{
 				
 		}

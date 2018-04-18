@@ -22,7 +22,7 @@ namespace Handin22
 					ZipCode = 9000
 				};
 
-				var Alborgadress = new Adress()
+				var alborgadress = new Adress()
 				{
 					Street = "Ceresbyen",
 					Number = "11A 2.1",
@@ -30,22 +30,22 @@ namespace Handin22
 
 				};
 				//Adding  primary adresses
-				PC.PAdress = Alborgadress;
-				PS.PAdress = Alborgadress;
+				PC.PAdress = alborgadress;
+				PS.PAdress = alborgadress;
 
 				u.Persons.Add(PC);
 				u.Persons.Add(PS);
 
 				//Adding Adresses to db
-				u.Adress.Add(Alborgadress);
+				u.Adress.Add(alborgadress);
 				//Adding cities to db
 				u.Cities.Add(alborgBy);
 
 				u.Complete();
 
-				List<Person> Personslist = (List<Person>) u.Persons.GetAll();
+				List<Person> personslist = (List<Person>) u.Persons.GetAll();
 
-				foreach (var item in Personslist)
+				foreach (var item in personslist)
 				{
 					Console.WriteLine($"{item.FirstName} {item.LastName}");
 				}
