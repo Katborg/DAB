@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Description;
 using Handin22;
+using REST_API.Models;
 
 namespace REST_API.Controllers
 {
@@ -13,12 +15,13 @@ namespace REST_API.Controllers
 	    private readonly IUnitOfWork _unitOfWork = new UnitOfWork(new PersonContext());
 
 
-		public IEnumerable<Person> GetAllPersons()
+		public IEnumerable<Person> GetAll()
 	    {
 			    return _unitOfWork.Persons.GetAll();
 	    }
 
-	    public IHttpActionResult GetPerson(int id)
+		[HttpGet]
+	    public IHttpActionResult Get(int id)
 	    {
 			var product = _unitOfWork.Persons.Get(id);
 
@@ -29,5 +32,65 @@ namespace REST_API.Controllers
 
 			return Ok(product);
 	    }
+
+		[HttpPut]
+	    public IHttpActionResult Put(int id, PersonDTO personDto)
+	    {
+		    if (!ModelState.IsValid)
+		    {
+			    return BadRequest(ModelState);
+		    }
+
+
+		    Person person = _unitOfWork.Persons.Get(id);
+
+		    if (person == null)
+		    {
+			    return NotFound();
+		    }
+
+		    person.FirstName = personDto.FirstName;
+		    person.MiddleName = personDto.MiddleName;
+		    person.LastName = personDto.LastName;
+		    person.PersonId = personDto.PersonId;
+		    person.Type = personDto.Type;
+			
+		    _unitOfWork.Complete();
+
+		    return StatusCode(HttpStatusCode.NoContent);
+		}
+
+	    [HttpPost]
+		public IHttpActionResult Post(int id, PersonDTO personDto)
+	    {
+		    if (!ModelState.IsValid)
+		    {
+			    return BadRequest(ModelState);
+		    }
+			
+
+		    if (_unitOfWork.Persons.Get(id) != null)
+		    {
+			    return StatusCode(HttpStatusCode.NotAcceptable);
+		    }
+
+		    
+			Person person = new Person(personDto.FirstName, personDto.LastName, personDto.Type)
+		    {
+			    MiddleName = personDto.MiddleName,
+			    LastName = personDto.LastName,
+			    PersonId = personDto.PersonId,
+			    Type = personDto.Type
+					
+		    };
+			
+			person.AAdresses.Add(_unitOfWork.Adress.Get(Int32.Parse(personDto.AdressId)));
+
+		    _unitOfWork.Persons.Add(person);
+		    _unitOfWork.Complete();
+
+		    return StatusCode(HttpStatusCode.Accepted);
+	    }
+
 	}
 }

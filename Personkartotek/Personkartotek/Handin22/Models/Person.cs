@@ -17,7 +17,6 @@ namespace Handin22
 		    FirstName = firstName;
 		    LastName = lastName;
 		    Type = type;
-
 	    }
 	    
 		public  int PersonId { get; set; }
@@ -28,6 +27,6 @@ namespace Handin22
         public List<Phone> PhoneNumbers {get; set;}
         public virtual Adress PAdress { get; set; }
         public virtual List<Adress> AAdresses { get; set; }
-
+		
     }
 }
