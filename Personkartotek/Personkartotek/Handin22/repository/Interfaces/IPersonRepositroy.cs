@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Handin22
 {
-	interface IPersonRepositroy : IRepository<Person>
+	public interface IPersonRepositroy : IRepository<Person>
 	{
 
 	}

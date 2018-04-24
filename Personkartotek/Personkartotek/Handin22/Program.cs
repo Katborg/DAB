@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Handin22
 {
-    class Program
+   /* class Program
     {
 		static void Main(string[] args)
 		{
@@ -200,5 +200,5 @@ namespace Handin22
             }
         }
 	*/
-    }
+    //}
 }

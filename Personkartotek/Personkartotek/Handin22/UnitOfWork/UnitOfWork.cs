@@ -2,7 +2,7 @@
 
 namespace Handin22
 {
-	class UnitOfWork : IUnitOfWork
+	public class UnitOfWork : IUnitOfWork
 	{
 		private readonly PersonContext _context;
 		

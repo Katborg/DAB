@@ -8,7 +8,7 @@ namespace Handin22
 { 
 	public interface IRepository<IEntity> where IEntity : class
 	{
-		IEntity Get(string id);
+		IEntity Get(int id);
 		IEnumerable<IEntity> GetAll();
 		void Add(IEntity entity);
 		void AddRange(IEnumerable<IEntity> entity);

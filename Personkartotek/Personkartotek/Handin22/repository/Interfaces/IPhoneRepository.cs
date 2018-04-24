@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Handin22
 {
-	interface IPhoneRepository
+	public interface IPhoneRepository
 	{
 	}
 }

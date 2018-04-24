@@ -25,7 +25,7 @@ namespace Handin22
 			DbContext.Set<IEntity>().AddRange(entity);
 		}
 
-		public virtual IEntity Get(string id)
+		public virtual IEntity Get(int id)
 		{
 			return DbContext.Set<IEntity>().Find(id);
 		}
