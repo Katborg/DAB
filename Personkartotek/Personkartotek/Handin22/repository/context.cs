@@ -21,6 +21,8 @@ namespace Handin22
 		{
 				
 		}
-	}
+
+        public System.Data.Entity.DbSet<Handin22.Phone> Phones { get; set; }
+    }
 	
 }
