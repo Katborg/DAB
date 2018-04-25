@@ -12,85 +12,96 @@ namespace REST_API.Controllers
 {
     public class PersonController : ApiController
     {
-	    private readonly IUnitOfWork _unitOfWork = new UnitOfWork(new PersonContext());
+        private readonly IUnitOfWork _unitOfWork = new UnitOfWork(new PersonContext());
 
 
-		public IEnumerable<Person> GetAll()
-	    {
-			    return _unitOfWork.Persons.GetAll();
-	    }
+        public IEnumerable<Handin22.Person> GetAll()
+        {
+            return _unitOfWork.Persons.GetAll();
+        }
 
-		[HttpGet]
-	    public IHttpActionResult Get(int id)
-	    {
-			var product = _unitOfWork.Persons.Get(id);
+        [HttpGet]
+        public IHttpActionResult Get(int id)
+        {
+            var product = _unitOfWork.Persons.Get(id);
 
-			if (product == null)
-			{
-				return NotFound();
-			}
+            if (product == null)
+            {
+                return NotFound();
+            }
 
-			return Ok(product);
-	    }
+            return Ok(product);
+        }
 
-		[HttpPut]
-	    public IHttpActionResult Put(int id, PersonDTO personDto)
-	    {
-		    if (!ModelState.IsValid)
-		    {
-			    return BadRequest(ModelState);
-		    }
+        [HttpPut]
+        public IHttpActionResult Put(int id, Models.Person personDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
 
-		    Person person = _unitOfWork.Persons.Get(id);
+            Handin22.Person person = _unitOfWork.Persons.Get(id);
 
-		    if (person == null)
-		    {
-			    return NotFound();
-		    }
+            if (person == null)
+            {
+                return NotFound();
+            }
 
-		    person.FirstName = personDto.FirstName;
-		    person.MiddleName = personDto.MiddleName;
-		    person.LastName = personDto.LastName;
-		    person.PersonId = personDto.PersonId;
-		    person.Type = personDto.Type;
-			
-		    _unitOfWork.Complete();
+            person.FirstName = personDto.FirstName;
+            person.MiddleName = personDto.MiddleName;
+            person.LastName = personDto.LastName;
+            person.PersonId = personDto.PersonId;
+            person.Type = personDto.Type;
 
-		    return StatusCode(HttpStatusCode.NoContent);
-		}
+            _unitOfWork.Complete();
 
-	    [HttpPost]
-		public IHttpActionResult Post(int id, PersonDTO personDto)
-	    {
-		    if (!ModelState.IsValid)
-		    {
-			    return BadRequest(ModelState);
-		    }
-			
+            return StatusCode(HttpStatusCode.NoContent);
+        }
 
-		    if (_unitOfWork.Persons.Get(id) != null)
-		    {
-			    return StatusCode(HttpStatusCode.NotAcceptable);
-		    }
+        [HttpPost]
+        public IHttpActionResult Post(int id, Models.Person personDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-		    
-			Person person = new Person(personDto.FirstName, personDto.LastName, personDto.Type)
-		    {
-			    MiddleName = personDto.MiddleName,
-			    LastName = personDto.LastName,
-			    PersonId = personDto.PersonId,
-			    Type = personDto.Type
-					
-		    };
-			
-			person.AAdresses.Add(_unitOfWork.Adress.Get(Int32.Parse(personDto.AdressId)));
 
-		    _unitOfWork.Persons.Add(person);
-		    _unitOfWork.Complete();
+            if (_unitOfWork.Persons.Get(id) != null)
+            {
+                return StatusCode(HttpStatusCode.NotAcceptable);
+            }
 
-		    return StatusCode(HttpStatusCode.Accepted);
-	    }
 
-	}
+            Handin22.Person person = new Handin22.Person(personDto.FirstName, personDto.LastName, personDto.Type)
+            {
+                MiddleName = personDto.MiddleName,
+                LastName = personDto.LastName,
+                PersonId = personDto.PersonId,
+                Type = personDto.Type
+
+            };
+
+            person.AAdresses.Add(_unitOfWork.Adress.Get(Int32.Parse(personDto.AdressId)));
+
+            _unitOfWork.Persons.Add(person);
+            _unitOfWork.Complete();
+
+            return StatusCode(HttpStatusCode.Accepted);
+        }
+
+        [HttpDelete]
+        public IHttpActionResult Delete(int id)
+        {
+            var product = _unitOfWork.Persons.Get(id);
+            if (product != null)
+            {
+                _unitOfWork.Persons.Remove(product);
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            return NotFound();
+        }
+    }
 }

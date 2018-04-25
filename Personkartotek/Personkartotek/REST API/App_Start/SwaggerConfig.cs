@@ -61,7 +61,7 @@ namespace REST_API
                         //c.BasicAuth("basic")
                         //    .Description("Basic HTTP Authentication");
                         //
-						// NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
+                        // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
                         //c.ApiKey("apiKey")
                         //    .Description("API Key Authentication")
                         //    .Name("apiKey")
@@ -133,6 +133,7 @@ namespace REST_API
                         // describing "complex" types in your API.
                         //
                         //c.SchemaId(t => t.FullName.Contains('`') ? t.FullName.Substring(0, t.FullName.IndexOf('`')) : t.FullName);
+                        c.SchemaId(x => x.FullName);
 
                         // Set this flag to omit schema property descriptions for any type properties decorated with the
                         // Obsolete attribute
