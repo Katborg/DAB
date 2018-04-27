@@ -9,9 +9,10 @@ namespace REST_API_DocumentDB.Controllers
     public class PeopleController : ApiController
     {
 	    
-	    private readonly PersonRepositry _personRepository = new PersonRepositry();
+	    private PersonRepositry _personRepository = new PersonRepositry();
+	    
 
-	    [HttpGet]
+		[HttpGet]
 	    public IHttpActionResult Get(int id)
 	    {
 		    var product = _personRepository.Get(id);

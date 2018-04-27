@@ -60,7 +60,7 @@ namespace DocumentDBPerson.repository
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+	            return null;
             }
 
         }
