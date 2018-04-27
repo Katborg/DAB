@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DocumentDBPerson.repository
 {
-	interface IPersonRepository
+	public interface IPersonRepository
 	{
 	}
 }

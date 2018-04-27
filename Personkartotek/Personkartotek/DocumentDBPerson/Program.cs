@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Net;
-using System.Security;
+
 using DocumentDBPerson.repository;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Newtonsoft.Json;
+
 
 namespace DocumentDBPerson
 {
@@ -64,7 +62,7 @@ namespace DocumentDBPerson
 
 			DocumentClient client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
 
-			PersonRepositry personRepository = new PersonRepositry(client, "PersonDB_oa", "PersonCol" );
+			PersonRepositry personRepository = new PersonRepositry();
 			
 			personRepository.Add(chris);
 			personRepository.Add(per);
@@ -72,6 +70,7 @@ namespace DocumentDBPerson
 
 			Person person1 = personRepository.Get(1);
 
+			
 			Console.WriteLine(person1);
 
 		}
